@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Nerfli</title>
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/buscador.css">
+    <link rel="stylesheet" href="css/uikit.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <script src="js/uikit-icons.min.js" ></script>
+    <script src="js/uikit.min.js" ></script>
+    <script src="js/home.js" ></script>
+    <script src="js/buscador.js"></script>
+
+</head>
+<body>
+
+  <header>
+      <nav>
+          <ul class="logo-list">
+              <li class="logo"> <img src="img/dh.png" alt=""> </li>
+          </ul>
+          <ul class="ul-menu">
+              <li class="menu-item home"><a class="color-violet" href="home.html">Inicio</a></li>
+              <li class="menu-item"><a class="color-violet" href="seriesGenres.html">Géneros</a></li>
+              <li class="menu-item"><a class="color-violet" href="buscador.html">Buscador</a></li>
+              <li class="menu-item search">
+                  <form class="" action="" method="GET">
+                      <input class="query" type="text" name="query" value="">
+                      <button class="btn-search" type="submit" name="button">Buscar</button>
+                  </form>
+              </li>
+
+          </ul>
+      </nav>
+  </header>
+
+    <div class="container">
+        <h3 align="center">Elige el método de busqueda que mas te guste, puedes combinar campos</h3>
+        <hr>
+        <form action="resultadoBusqueda.html" method="get">
+            <input type="hidden" value="e59c94a503ea78e9502aa8e308f21eb5" name="key">
+            <div class="form-group">
+                <label for="exampleFormControlInput1">Por título</label>
+                <input type="text" name="query" class="form-control" id="exampleFormControlInput1" placeholder="e.g: Harry Poker y las reliquias del Casino Flotante" autofocus>
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Por género</label>
+                <select class="form-control" name="with_genres" id="exampleFormControlSelect1">
+                    <option value="" selected disabled>Géneros</option>
+                </select>
+                <br>
+                <label for="exampleFormControlSelect2">Por año</label>
+                <select class="form-control" name="first_air_date_year" id="exampleFormControlSelect2">
+                    <option value="" selected disabled>Año de estreno</option>
+                    <option value="2019">2019</option>
+                    <option value="2018">2018</option>
+                    <option value="2017">2017</option>
+                    <option value="2016">2016</option>
+                    <option value="2015">2015</option>
+                    <option value="2014">2014</option>
+                    <option value="2013">2013</option>
+                    <option value="2012">2012</option>
+                    <option value="2011">2011</option>
+                    <option value="2010">2010</option>
+                    <option value="2009">2009</option>
+                    <option value="2008">2008</option>
+                    <option value="2007">2007</option>
+                    <option value="2006">2006</option>
+                    <option value="2005">2005</option>
+                    <option value="2004">2004</option>
+                    <option value="2003">2003</option>
+                    <option value="2002">2002</option>
+                    <option value="2001">2001</option>
+                    <option value="2000">2000</option>
+                </select>
+                <br>
+                <label for="exampleFormControlSelect3">Orden de los resultados</label>
+                <select class="form-control" name="sort_by" id="exampleFormControlSelect3">
+                    <option value="" selected disabled>Ordenar por</option>
+                    <option value="vote_average.desc">Votos de mayor a menor</option>
+                    <option value="vote_average.asc">Votos de menor a mayor</option>
+                    <option value="first_air_date.desc">Fecha de estreno de mayor a menor</option>
+                    <option value="first_air_date.asc">Fecha de estreno de menor a mayor</option>
+                    <option value="popularity.desc">Popularidad de mayor a menor</option>
+                    <option value="popularity.asc">Popularidad de menor a mayor</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Submit</button>
+        </form>
+
+    </div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+</html>

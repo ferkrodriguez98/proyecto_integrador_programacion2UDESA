@@ -1,0 +1,16 @@
+main{
+  margin-top: 85px;
+}
+main .grilla-series div{
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+  margin-bottom: 10px;
+}
+main .grilla-series div a{
+  text-align: center;
+  text-decoration: none;
+
+}

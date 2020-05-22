@@ -1,0 +1,50 @@
+header nav {
+	overflow: hidden;
+	width: 100%;
+	height: 85px;
+	background-color: white;
+	z-index: 999;
+  box-shadow: -2px -2px 5px white, 2px 2px 5px white;
+	position: fixed;
+  top: 0;
+  left: 0;
+}
+header nav ul.logo-list {
+	float: left;
+	padding-left: 0;
+	margin-top: -5px;
+}
+header nav ul li {
+	list-style: none;
+}
+header nav ul li.logo img {
+  max-width: 250px;
+}
+header nav ul.ul-menu {
+	float: right;
+	width: 70%;
+	margin-top: 25px;
+}
+header nav ul.ul-menu li.menu-item {
+	float: left;
+  width: 13%;
+	margin-right: 2%;
+  text-align: center;
+}
+
+header nav ul.ul-menu li.search {
+	width: 38%;
+}
+
+header nav ul.ul-menu li.li-menu:hover {
+	color: gray;
+	transition: 1s;
+}
+header nav ul li a {
+	text-decoration: none;
+	font-size: 1.25em;
+  color: rgb(196, 40, 78);
+}
+header nav ul li a:hover{
+	color: black;
+}
