@@ -15,7 +15,9 @@ module.exports = {
     },
 
     newReview: function(req, res) {
-        return res.render('series/new_review');
+        return res.render('reviews/new_review', {
+            params : req.params
+        });
     },
 
     storeReview: function(req, res) {
@@ -35,7 +37,7 @@ module.exports = {
 			.Review
 			.findByPk(req.params.id)
 			.then(function (results) {
-				return res.render('series/edit_review', {
+				return res.render('reviews/edit_review', {
                     id : results.id,
                     series_review : results.series_review,
                     rating : results.rating,
@@ -57,7 +59,7 @@ module.exports = {
                 }
             )
             .then(savedReview => {
-                return res.send(savedReview)
+                return res.redirect('/') // deberia mandar de vuelta a la serie
             })
             .catch (error => {
                 return res.send(error)
@@ -105,10 +107,12 @@ module.exports = {
                 order: [
                     [ 'updatedAt', 'DESC' ]
                 ],
-                limit: 10,
+                limit: 5,
             })
             .then(function (results) {
-                return res.send(results);
+                return res.render('reviews/recent', {
+                    review: results,
+                });
             })
             .catch(function (error) {
                 return res.send(error)
@@ -148,4 +152,40 @@ module.exports = {
                 return res.send(error)
             })
     },
+
+    deleteReview: function(req, res) {
+        console.log("hola")
+        DB
+            .Review
+            .destroy({
+                where: {
+                    id : req.params.id
+                }
+            })
+            .then(function (results) {
+                return res.render('index');
+            })
+            .catch(function (error) {
+                return res.send(error);
+            })
+
+    },
+
+    ourFavouriteReviews: function(req, res) {
+        DB
+            .Review
+            .findAll({
+                where : {
+                    user_id : 1,
+                }
+            })
+            .then(function (results) {
+                return res.render('reviews/ourfavourites', {
+                    review : results,
+                })
+            })
+            .catch(function (error) {
+                return res.send(error);
+            })
+    }
 }

@@ -1,5 +1,6 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
+const { Review } = require('../database/models/review')
 
 module.exports = {
     index: function(req, res) {
@@ -32,19 +33,34 @@ module.exports = {
     userDetailByUsername: function(req, res) {
         DB
             .User
-            .findOne({
-                where: [
-                    { username : req.params.username }
-                ]
+            .findAll(
+            {
+                where: {
+                    username: req.params.username,
+                },
+                // include: [
+                //     { 
+                //         association: Review,
+                //         as: 'review'
+                //     }
+                // ]
             })
+            // {
+            //     where: [
+            //         { username : req.params.username }
+            //     ]
+            // })
             .then(function (results) {
-                return res.render('users/profile', {
+                return res.send(
+                    'users/profile', 
+                {
                     id : results.id,
                     username : results.username,
                     email: results.email,
                     birthdate: results.birthdate,
                     favorite_genre: results.favorite_genre
-                });
+                }
+                );
             })
             .catch(function (error) {
                 return res.send(error)

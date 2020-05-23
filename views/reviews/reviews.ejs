@@ -1,0 +1,60 @@
+<% for( let i = 0; i < review.length; i++ ) { %>
+<div class="w-11/12 md:w-3/4 lg:w-1/2 mx-auto rounded shadow-xl my-6 p-6 text-left bg-white">
+    <div class="pb-2 font-bold">
+       Acá va el nombre de usuario
+    </div>
+    <div class="pb-2 font-bold">
+       <% if (review[i].rating == 0 || review[i].rating > 10) { %>
+          <i class="fas fa-star" style="color: #fffb00;"></i>
+       <% } else { %>
+       <% for( let j = 0; j < (review[i].rating / 2); j++ ) { %>
+          <i class="fas fa-star" style="color: #fffb00;"></i>
+       <% } %>
+       <% } %>
+    </div>
+    <div class="pb-2 text-justify">
+       <%= review[i].series_review %> 
+    </div>
+    <div class="pt-4 text-right">
+       <form action="/reviews/delete/<%= review[i].id %>" method="POST">
+          <a href="/reviews/edit/<%= review[i].id %>" class="inline-block bg-blue-500 hover:bg-blue-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
+             Edit
+          </a>
+          <a class="modal-open inline-block bg-red-500 hover:bg-red-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
+             Delete
+          </a>
+          <div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+             <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+             
+             <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+         
+               <!-- Add margin if you want to see some of the overlay behind the modal-->
+               <div class="modal-content py-4 text-left px-6">
+                 <!--Title-->
+                 <div class="flex justify-between items-center pb-3">
+                   <p class="text-2xl font-black">Are you sure?</p>
+                   <div class="modal-close cursor-pointer z-50">
+                     <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+                       <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+                     </svg>
+                   </div>
+                 </div>
+         
+                 <!--Body-->
+                 <p>Once you delete your review you can't recover it.</p>
+         
+                 <!--Footer-->
+                 <div class="flex justify-end pt-4">
+                   <%= review[i].id %>
+                   <button type="submit" class="modal-open inline-block bg-red-500 hover:bg-red-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
+                      Yes, delete it!
+                   </button>
+                 </div>
+                 
+               </div>
+             </div>
+          </div>
+       </form>
+    </div>
+ </div>
+ <% } %>
