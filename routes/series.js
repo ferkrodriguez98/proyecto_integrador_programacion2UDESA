@@ -3,7 +3,7 @@ const router = express.Router();
 
 const controller = require('../controllers/seriesController');
 
-router.get('/detail', controller.detail)
+router.get('/detail/:id', controller.detail)
 
 // router.get('/', controller.index);
 

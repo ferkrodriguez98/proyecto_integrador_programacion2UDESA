@@ -1,5 +1,6 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
+// const bcrypt = require('bcryptjs');
 
 // // Load hash from your password DB.
 // bcrypt.compareSync("B4c0/\/", hash); // true

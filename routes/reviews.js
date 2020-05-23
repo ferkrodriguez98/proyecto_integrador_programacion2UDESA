@@ -7,6 +7,8 @@ router.get('/', controller.index);
 
 router.get('/new', controller.newReview);
 
+router.get('/new/:id', controller.newReview);
+
 router.post('/store', controller.storeReview);
 
 router.get('/edit/:id', controller.editReview);
@@ -22,5 +24,9 @@ router.get('/recent', controller.recentReviews);
 router.get('/user/:id', controller.userReviews);
 
 router.get('/series/:id', controller.seriesReviews);
+
+router.post('/delete/:id', controller.deleteReview);
+
+router.get('/our-favourites', controller.ourFavouriteReviews);
 
 module.exports = router;
