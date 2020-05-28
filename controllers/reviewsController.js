@@ -26,16 +26,50 @@ module.exports = {
 
     newReview: function(req, res) {
         return res.render('reviews/new_review', {
-            params : req.params
+            params : req.params,
+            errors : false,
+            email : false,
+            series_review : false,
+            rating : false,
         });
     },
 
-    storeReview: function(req, res) {
+
+    checkBeforeStoringReview: function(req, res) {
+        console.log(req.body)
+        DB
+            .User
+            .findOne(
+                {
+                    where : {
+                        email: req.body.email,
+                        password: req.body.password,
+                    },
+                    
+                }
+            )
+            .then (function (results) {
+                if (results[0] != '') {
+                    return module.exports.saveReview(req, res, results)
+                }
+            })
+            .catch (function (error) {
+                console.log(error)
+                return res.render('reviews/new/', { // aca falta pasar el id
+                    id : req.params.id,
+                    errors : "Incorrect username or password", 
+                    email : req.body.email,
+                });
+            })
+    },
+
+    saveReview: function (req, res, results) {
+        req.body.user_id = results.id; // negrada mal pero funciona
         console.log(req.body)
         DB
             .Review
             .create(req.body)
-            .then(savedReview => {
+            .then(function (results) {
                 return res.redirect('/series/detail/' + req.body.series_id)
             })
             .catch (error => {
@@ -178,7 +212,7 @@ module.exports = {
                 }
             })
             .then(function (results) {
-                return res.render('index');
+                return res.render('index'); // mandar al perfil de vuelta
             })
             .catch(function (error) {
                 return res.send(error);

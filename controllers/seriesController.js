@@ -13,7 +13,7 @@ module.exports = {
                     series_id : req.params.id,
                 },
                 order: [
-                    [ 'updatedAt', 'ASC' ]
+                    [ 'updatedAt', 'DESC' ]
                 ],
                 limit: 5,
                 include: [

@@ -9,7 +9,7 @@ router.get('/new', controller.newReview);
 
 router.get('/new/:id', controller.newReview);
 
-router.post('/store', controller.storeReview);
+router.post('/store', controller.checkBeforeStoringReview);
 
 router.get('/edit/:id', controller.editReview);
 

@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var moment = require('moment');
 
 var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
@@ -29,6 +30,8 @@ app.use('/register', registerRouter);
 app.use('/users', usersRouter);
 app.use('/series', seriesRouter);
 app.use('/reviews', reviewsRouter);
+
+app.locals.moment = require('moment');
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

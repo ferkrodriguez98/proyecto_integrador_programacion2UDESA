@@ -5,6 +5,6 @@ const controller = require('../controllers/registerController');
 
 router.get('/', controller.index);
 
-router.post('/', controller.register);
+router.post('/', controller.checkIfExists);
 
 module.exports = router;

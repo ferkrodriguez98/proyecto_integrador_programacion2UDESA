@@ -5,17 +5,28 @@
     <title>Document</title>
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-    <script src="js/detalle.js" ></script>
     <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" data-auto-a11y="true"></script>
 </head>
 <body class="bg-gray-300 flex flex-col h-screen justify-between">
    <%- include('../common/header.ejs') %>
     <section class="pb-12">
-         <div class="w-11/12 md:w-3/4 lg:w-1/2 mx-auto text-center imagenSerie bg-white my-6 py-6">
-            <h2>alta serie <%= review.id %></h2>
-            <img src="" alt="">
-            <div>
+         <div class="w-11/12 flex md:w-3/4 lg:w-2/3 mx-auto text-center imagenSerie bg-white my-6 py-6">
+            <div id="series_poster" class="text-left w-1/2 flex mx-auto pb-4">
 
+            </div>
+            <div class="w-1/2">
+               <div id="series_title">
+                  
+               </div>
+               <div id="series_rating">
+               
+               </div>
+               <div id="series_genre">
+               
+               </div>
+               <div id="series_overview">
+               
+               </div>
             </div>
          </div>
          
@@ -55,43 +66,41 @@
    }
 </style>
 <script>
-      // No funciona porque carga una sola vez y queda en la primera iteración. De todos modos no anduvo para borrar la primera iteración
-      // var openmodal = document.querySelectorAll('.modal-open')
-      // for (var i = 0; i < openmodal.length; i++) {
-      //    openmodal[i].addEventListener('click', function(event){
-      //    event.preventDefault()
-      //    toggleModal()
-      //    })
-      // }
-      
-      // const overlay = document.querySelector('.modal-overlay')
-      // overlay.addEventListener('click', toggleModal)
-      
-      // var closemodal = document.querySelectorAll('.modal-close')
-      // for (var i = 0; i < closemodal.length; i++) {
-      //    closemodal[i].addEventListener('click', toggleModal)
-      // }
-      
-      // document.onkeydown = function(evt) {
-      //    evt = evt || window.event
-      //    var isEscape = false
-      //    if ("key" in evt) {
-      //    isEscape = (evt.key === "Escape" || evt.key === "Esc")
-      //    } else {
-      //    isEscape = (evt.keyCode === 27)
-      //    }
-      //    if (isEscape && document.body.classList.contains('modal-active')) {
-      //    toggleModal()
-      //    }
-      // };
-      
-      
-      // function toggleModal () {
-      //    const body = document.querySelector('body')
-      //    const modal = document.querySelector('.modal')
-      //    modal.classList.toggle('opacity-0')
-      //    modal.classList.toggle('pointer-events-none')
-      //    body.classList.toggle('modal-active')
-      // }
+   window.onload = function () {
+      var series_id = window.location.pathname.replace( /^\D+/g, '');
+      var poster = "https://image.tmdb.org/t/p/original/";
+      var key = "e59c94a503ea78e9502aa8e308f21eb5";
+
+      var series = "https://api.themoviedb.org/3/tv/" + series_id + "?api_key=" + key + "&language=en-US&page=1";
+
+      fetch(series, {
+            method: "GET",
+      })
+      .then(function (response) {
+            return response.json();
+      })
+      .then(function (data) {
+            var title = document.querySelector("#series_title");
+            title.innerHTML = '<h1 class="text-2xl font-bold">' + data.name + '</h1>';
+
+            var rating = document.querySelector("#series_rating");
+            score = Math.round(data.vote_average / 2);
+            for (i = 0; i < score; i++) {
+               rating.innerHTML+= '<i class="fas fa-star mt-1" style="color: #fffb00;"></i>'; 
+            }
+
+            var poster = document.querySelector("#series_poster");
+            poster.innerHTML = '<img class="mx-auto" src="https://image.tmdb.org/t/p/original/' + data.poster_path + '"/>';
+
+            var genre = document.querySelector("#series_genre");
+            genre.innerHTML = '<h3 class="text-md py-3"> Category: ' + data.genres[0].name + '</h3>';
+
+            var overview = document.querySelector("#series_overview");
+            overview.innerHTML = '<p class="text-sm px-4 sm:px-8 md:px-16 lg:px-24 text-justify">' + data.overview + '</p>';
+      })
+      .catch(function (error) {
+            console.log("El error es: " + error);
+      });
+   }
 </script>
 </html>

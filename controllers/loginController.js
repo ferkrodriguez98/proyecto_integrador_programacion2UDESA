@@ -1,5 +1,6 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
+const usersController = require('../controllers/usersController');
 // const bcrypt = require('bcryptjs');
 
 // // Load hash from your password DB.
@@ -8,12 +9,14 @@ const Op = DB.Sequelize.Op;
 
 module.exports = {
     index: function(req, res) {
-        return res.render('auth/login');
+        return res.render('auth/login', { 
+            errors: false,
+            email: false,
+         });
     },
 
-    checkUser: function(req, res) {
-        console.log(req.body.email)
-        console.log(req.body.password)
+    login: function(req, res) {
+        console.log(req.body)
         DB
             .User
             .findOne(
@@ -25,12 +28,22 @@ module.exports = {
                 }
             )
             .then (function (results) {
-                return res.send("Lo encontré"); // esta entrando aca siempre
+                if (results[0] != '') {
+                    console.log(results.email)
+                    return usersController.myProfile(req, res, results)
+                }
             })
             .catch (function (error) {
-                return res.send("No lo encontré");
+                return res.render('auth/login', {
+                    errors : "Incorrect username or password",
+                    email : req.body.email,
+                });
             })
     },
+
+    // checkEmail: function(req, res) {
+
+    // }
 
     // checkPassword: function(req, res) {
     //     console.log(req.body)

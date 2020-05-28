@@ -22,9 +22,11 @@
         </div>
         <div class="pt-6 flex w-full text-center">
             <h3 class="pt-2 mx-auto w-1/2">
-                <%= birthdate %> 
+                <b>Birthday</b> <br>
+                <%= moment(birthdate).format('Do MMM YYYY') %> 
             </h3>
             <h3 class="pt-2 mx-auto w-1/2">
+                <b>Favorite Genre</b>  <br>
                 <%= favorite_genre %> 
             </h3>
         </div>
