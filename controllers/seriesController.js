@@ -1,5 +1,6 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
+const { User } = require('../database/models');
 
 module.exports = {
     // detalle de la serie con reseñas
@@ -15,6 +16,13 @@ module.exports = {
                     [ 'updatedAt', 'ASC' ]
                 ],
                 limit: 5,
+                include: [
+                    { 
+                        model: User,
+                        as: 'user',
+                        required: false,
+                    }
+                ]
             })
             .then(function (results) {
                 return res.render('series/detail', {

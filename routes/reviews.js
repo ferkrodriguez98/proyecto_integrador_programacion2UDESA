@@ -21,8 +21,6 @@ router.get('/worst', controller.worstReviews);
 
 router.get('/recent', controller.recentReviews);
 
-router.get('/user/:id', controller.userReviews);
-
 router.get('/series/:id', controller.seriesReviews);
 
 router.post('/delete/:id', controller.deleteReview);

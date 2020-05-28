@@ -1,11 +1,21 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
+const { User } = require('../database/models');
 
 module.exports = {
     index: function(req, res) {
         DB
             .Review
-            .findAll()
+            .findAll(
+            {
+                include: [
+                    { 
+                        model: User,
+                        as: 'user',
+                        required: false,
+                    }
+                ]
+            })
             .then(function (results) {
                 return res.send(results);
             })
@@ -21,11 +31,12 @@ module.exports = {
     },
 
     storeReview: function(req, res) {
+        console.log(req.body)
         DB
             .Review
             .create(req.body)
             .then(savedReview => {
-                return res.send(savedReview)
+                return res.redirect('/series/detail/' + req.body.series_id)
             })
             .catch (error => {
                 return res.send(error)
@@ -119,22 +130,26 @@ module.exports = {
             })
     },
 
-    userReviews: function(req, res) {
-        DB
-            .Review
-            .findAll(
-            {
-                where : {
-                    user_id : req.params.id,
-                }
-            })
-            .then(function (results) {
-                return res.send(results);
-            })
-            .catch(function (error) {
-                return res.send(error)
-            })
-    },
+    // userReviews: function(req, res) {
+    //     console.log(req.params.username)
+    //     console.log("HOLA")
+    //     DB
+    //         .Review
+    //         .findAll(
+    //         {
+    //             where : {
+    //                 username : req.params.username,
+    //             }
+    //         })
+    //         .then(function (results) {
+    //             return res.render('/users/profile', {
+    //                 results : results,
+    //             });
+    //         })
+    //         .catch(function (error) {
+    //             return res.send(error)
+    //         })
+    // },
 
     seriesReviews: function(req, res) {
         DB

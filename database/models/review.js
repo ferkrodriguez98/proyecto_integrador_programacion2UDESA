@@ -15,10 +15,10 @@ module.exports = function (sequelize, DataTypes) {
             user_id: {
                 type: DataTypes.INTEGER(11).UNSIGNED,
                 allowNull: false,
-                references: {
-                    model: 'user',
-                    key: 'id',
-                },
+                // references: {
+                //     model: 'user',
+                //     key: 'id',
+                // },
             },
             series_review: {
                 type: DataTypes.STRING(500),
