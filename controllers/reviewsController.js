@@ -1,9 +1,10 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
 const { User } = require('../database/models');
+const bcrypt = require('bcryptjs');
 
 module.exports = {
-    index: function(req, res) {
+    index: function(req, res) { // search all reviews
         DB
             .Review
             .findAll(
@@ -24,9 +25,9 @@ module.exports = {
             })
     },
 
-    newReview: function(req, res) {
+    newReview: function(req, res) { // render reviews/new_review -- authMiddleware
         return res.render('reviews/new_review', {
-            params : req.params,
+            series_id : req.body.series_id,
             errors : false,
             email : false,
             series_review : false,
@@ -34,37 +35,54 @@ module.exports = {
         });
     },
 
-
-    checkBeforeStoringReview: function(req, res) {
-        console.log(req.body)
+    checkBeforeStoringReview: function(req, res) { // auth before storing review
         DB
             .User
             .findOne(
                 {
                     where : {
                         email: req.body.email,
-                        password: req.body.password,
                     },
                     
                 }
             )
             .then (function (results) {
-                if (results[0] != '') {
-                    return module.exports.saveReview(req, res, results)
+                if (results != null) {
+                    if (bcrypt.compareSync(req.body.password, results.password)) {
+                        return module.exports.saveReview(req, res, results)
+                    } else {
+                        return res.render('reviews/new_review', {
+                            series_id : req.body.series_id,
+                            errors : "Incorrect password", 
+                            email : req.body.email,
+                            series_review : req.body.series_review,
+                            rating : req.body.rating,
+                        });
+                    }
+                } else {
+                    return res.render('reviews/new_review', {
+                        series_id : req.body.series_id,
+                        errors : "Unexistent user", 
+                        email : req.body.email,
+                        series_review : req.body.series_review,
+                        rating : req.body.rating,
+                    });
                 }
             })
             .catch (function (error) {
                 console.log(error)
-                return res.render('reviews/new/', { // aca falta pasar el id
-                    id : req.params.id,
-                    errors : "Incorrect username or password", 
+                return res.render('reviews/new_review', {
+                    series_id : req.body.series_id,
+                    errors : "An unexpected error happened, please try again", 
                     email : req.body.email,
+                    series_review : req.body.series_review,
+                    rating : req.body.rating,
                 });
             })
     },
 
-    saveReview: function (req, res, results) {
-        req.body.user_id = results.id; // negrada mal pero funciona
+    saveReview: function (req, res, results) { // store review
+        req.body.user_id = results.id; // forrada mal? funciona 
         console.log(req.body)
         DB
             .Review
@@ -77,13 +95,17 @@ module.exports = {
             })
     },
 
-    editReview: function (req, res) {
+    editReview: function (req, res) { // render reviews/edit_review -- authMiddleware
 		DB
 			.Review
-			.findByPk(req.params.id)
+			.findByPk(req.body.review_id)
 			.then(function (results) {
 				return res.render('reviews/edit_review', {
-                    id : results.id,
+                    params : req.params,
+                    errors : false,
+                    email : false,
+                    review_id : results.id,
+                    series_id : results.series_id,
                     series_review : results.series_review,
                     rating : results.rating,
 				})
@@ -92,26 +114,77 @@ module.exports = {
 				return res.send(error); 
 			})
     },
+
+    checkBeforeUpdatingReview: function(req, res) { // auth before updating review
+        console.log(req.body)
+        DB
+            .User
+            .findOne(
+                {
+                    where : {
+                        email: req.body.email,
+                    },
+                    
+                }
+            )
+            .then (function (results) {
+                if (results != null) {
+                    if (bcrypt.compareSync(req.body.password, results.password)) {
+                        return module.exports.updateReview(req, res, results)
+                    } else {
+                        return res.render('reviews/edit_review', { 
+                            review_id : req.body.review_id,
+                            series_id : req.body.series_id,
+                            errors : "Incorrect password", 
+                            email : req.body.email,
+                            series_review : req.body.series_review,
+                            rating : req.body.rating,
+                        });
+                    }
+                } else {
+                    return res.render('reviews/edit_review', {
+                        review_id : req.body.review_id,
+                        series_id : req.body.series_id,
+                        errors : "Unexistent user", 
+                        email : req.body.email,
+                        series_review : req.body.series_review,
+                        rating : req.body.rating,
+                    });
+                }
+            })
+            .catch (function (error) {
+                console.log(error)
+                return res.render('reviews/edit_review', { 
+                    review_id : req.body.review_id,
+                    series_id : req.body.series_id,
+                    errors : "Sorry, an error ocurred, please try again", 
+                    email : req.body.email,
+                    series_review : req.body.series_review,
+                    rating : req.body.rating,
+                });
+            })
+    },
     
-    updateReview: function(req, res) {
+    updateReview: function(req, res, results) { // update review
+        console.log(req.body)
         DB
             .Review
             .update(req.body,
                 {
                     where : {
-                        id: req.params.id,
+                        id: req.body.review_id,
                     }
                 }
             )
-            .then(savedReview => {
-                return res.redirect('/') // deberia mandar de vuelta a la serie
+            .then(function (results) {
+                return res.redirect('/series/detail/' + req.body.series_id)
             })
             .catch (error => {
                 return res.send(error)
             })
     },
     
-    bestReviews: function(req, res) {
+    bestReviews: function(req, res) { // best reviews
         DB
             .Review
             .findAll({
@@ -128,7 +201,7 @@ module.exports = {
             })
     },
     
-    worstReviews: function(req, res) {
+    worstReviews: function(req, res) { // worst reviews
         DB
             .Review
             .findAll({
@@ -145,7 +218,7 @@ module.exports = {
             })
     },
 
-    recentReviews: function(req, res) {
+    recentReviews: function(req, res) { // recent reviews
         DB
             .Review
             .findAll({
@@ -164,28 +237,7 @@ module.exports = {
             })
     },
 
-    // userReviews: function(req, res) {
-    //     console.log(req.params.username)
-    //     console.log("HOLA")
-    //     DB
-    //         .Review
-    //         .findAll(
-    //         {
-    //             where : {
-    //                 username : req.params.username,
-    //             }
-    //         })
-    //         .then(function (results) {
-    //             return res.render('/users/profile', {
-    //                 results : results,
-    //             });
-    //         })
-    //         .catch(function (error) {
-    //             return res.send(error)
-    //         })
-    // },
-
-    seriesReviews: function(req, res) {
+    seriesReviews: function(req, res) { // reviews from a series
         DB
             .Review
             .findAll(
@@ -202,8 +254,8 @@ module.exports = {
             })
     },
 
-    deleteReview: function(req, res) {
-        console.log("hola")
+    deleteReview: function(req, res) { // destroy review
+        console.log(req.body)
         DB
             .Review
             .destroy({
@@ -220,7 +272,7 @@ module.exports = {
 
     },
 
-    ourFavouriteReviews: function(req, res) {
+    ourFavouriteReviews: function(req, res) { // reviews from user with id 1
         DB
             .Review
             .findAll({

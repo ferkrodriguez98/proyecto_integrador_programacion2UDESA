@@ -10,11 +10,13 @@
 <body class="bg-gray-300 flex flex-col h-screen justify-between">
    <%- include('../common/header.ejs') %>
     <section class="pb-12">
-         <div class="w-11/12 flex md:w-3/4 lg:w-2/3 mx-auto text-center imagenSerie bg-white my-6 py-6">
-            <div id="series_poster" class="text-left w-1/2 flex mx-auto pb-4">
-
+         <div class="w-11/12 md:w-3/4 lg:w-2/3 mx-auto text-center imagenSerie bg-white my-6 py-6">
+            <div class="">
+               <div id="series_poster" class="mx-auto p-4 max-w-md">
+               
+               </div>
             </div>
-            <div class="w-1/2">
+            <div class="">
                <div id="series_title">
                   
                </div>
@@ -43,9 +45,14 @@
             </div>
             <% } %>
             <div class="pt-4">
-               <a href="/reviews/new/<%= params.id %>" class="bg-blue-500 hover:bg-blue-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
-                  Add a review
-               </a>
+               <form action="/reviews/new" method="post">
+                  <input type="number" class="hidden" value="<%= params.id %>" name="series_id">
+               
+                  </input>
+                  <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
+                     Add a review
+                  </button>
+               </form>
             </div>
          </div>
     </section>
@@ -85,18 +92,26 @@
 
             var rating = document.querySelector("#series_rating");
             score = Math.round(data.vote_average / 2);
-            for (i = 0; i < score; i++) {
-               rating.innerHTML+= '<i class="fas fa-star mt-1" style="color: #fffb00;"></i>'; 
+            if (score != 0 ) {
+               for (i = 0; i < score; i++) {
+                  rating.innerHTML+= '<i class="fas fa-star mt-1" style="color: #fffb00;"></i>'; 
+               }
+            } else {
+               rating.innerHTML+= '<p class="mt-1">unknown rating</p>'
             }
 
             var poster = document.querySelector("#series_poster");
-            poster.innerHTML = '<img class="mx-auto" src="https://image.tmdb.org/t/p/original/' + data.poster_path + '"/>';
+            if (data.poster_path != null) {
+               poster.innerHTML = '<img class="mx-auto" src="https://image.tmdb.org/t/p/original/' + data.backdrop_path + '"/>';
+            } else {
+               poster.innerHTML = ''
+            }
 
             var genre = document.querySelector("#series_genre");
             genre.innerHTML = '<h3 class="text-md py-3"> Category: ' + data.genres[0].name + '</h3>';
 
             var overview = document.querySelector("#series_overview");
-            overview.innerHTML = '<p class="text-sm px-4 sm:px-8 md:px-16 lg:px-24 text-justify">' + data.overview + '</p>';
+            overview.innerHTML = '<p class="text-sm px-4 sm:px-8 md:px-12 text-justify">' + data.overview + '</p>';
       })
       .catch(function (error) {
             console.log("El error es: " + error);

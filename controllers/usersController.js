@@ -1,8 +1,6 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
 const { Review } = require('../database/models')
-const authMiddleware = require('../middlewares/authMiddleware');
-const guestMiddleware = require('../middlewares/guestMiddleware');
 
 module.exports = {
     index: function(req, res) { // all users
@@ -87,7 +85,7 @@ module.exports = {
             })
     },
 
-    myProfile: function(req, res, results) { // own profile and reviews -- authMiddleware
+    myProfile: function(req, res, results) { // own profile and reviews 
         DB
             .User
             .findOne(
@@ -119,6 +117,9 @@ module.exports = {
                     review: results.review,
                 }
                 );
+            })
+            .catch(function (error) {
+                return res.send(error);
             })
     }
 }

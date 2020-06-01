@@ -1,3 +1,8 @@
+<% if (review.length == 0) { %>
+<div class="w-1/4 mx-auto rounded shadowx-l p-6 mb-12 text-center bg-white">
+	No reviews made by this user
+</div>
+<% } %>
 <% for( let i = 0; i < review.length; i++ ) { %>
 <div class="w-11/12 md:w-3/4 lg:w-1/2 mx-auto rounded shadow-xl my-6 p-6 text-left bg-white reviews-container" data-serie-id="<%= review[i].series_id %>">
 	<div class="justify-between flex w-full">

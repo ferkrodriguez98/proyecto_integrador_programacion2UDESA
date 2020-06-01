@@ -21,9 +21,9 @@
                     ID de la serie
                 </label>
             </div>
-            <% if (params.id != null) { %>
+            <% if (series_id != null) { %>
                 <div class="md:w-2/3">
-                    <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="series_id" type="number" name="series_id" required value="<%= params.id %>"></input>
+                    <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="series_id" type="number" name="series_id" required value="<%= series_id %>"></input>
                 </div>
             <% } else { %>
                 <div class="md:w-2/3">
@@ -40,13 +40,13 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                 Email
             </label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="<%= email ? email : '' %>" id="email" type="email" name="email" required>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="<%= email ? email : '' %>" id="email" type="email" name="email" onkeypress="return avoidSpace(event)" required>
         </div>
         <div class="mb-2">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
                 Password
             </label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" name="password" required>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" name="password" onkeypress="return avoidSpace(event)" required>
         </div>
         <% if (errors) { %>
         <div class="mb-4 text-xs text-center text-red-400">
@@ -77,7 +77,7 @@
                 </label>
             </div>
             <div class="md:w-2/3">
-                <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="series_review" type="textarea" name="series_review" required></input>
+                <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" value="<%= series_review ? series_review : '' %>" id="series_review" type="textarea" name="series_review" required></input>
             </div>
         </div>
         <div class="md:flex md:items-center mb-6">
@@ -87,7 +87,7 @@
                 </label>
             </div>
             <div class="md:w-2/3">
-                <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="rating" type="number" name="rating" required>
+                <input class="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" value="<%= rating ? rating : '' %>" id="rating" type="number" name="rating" required>
             </div>
         </div>
         <div class="md:flex md:items-center">
@@ -103,28 +103,35 @@
 </body>
 </html>
 <script>
+    function avoidSpace(event) {
+         var j = event ? event.which : window.event.keyCode;
+         if (j == 32) return false;
+    }
+    
     window.onload = function () {
-      var series_id = window.location.pathname.replace( /^\D+/g, '');
-      var poster = "https://image.tmdb.org/t/p/original/";
-      var key = "e59c94a503ea78e9502aa8e308f21eb5";
+            
+        // var series_id = window.location.pathname.replace( /^\D+/g, '');
+        var series_id = <%= series_id %>;
+        var poster = "https://image.tmdb.org/t/p/original/";
+        var key = "e59c94a503ea78e9502aa8e308f21eb5";
 
-      var series = "https://api.themoviedb.org/3/tv/" + series_id + "?api_key=" + key + "&language=en-US&page=1";
+        var series = "https://api.themoviedb.org/3/tv/" + series_id + "?api_key=" + key + "&language=en-US&page=1";
 
-      fetch(series, {
+        fetch(series, {
             method: "GET",
-      })
-      .then(function (response) {
+        })
+        .then(function (response) {
             return response.json();
-      })
-      .then(function (data) {
+        })
+        .then(function (data) {
             var title = document.querySelector("#series_title");
             title.innerHTML = '<h1 class="text-2xl font-bold">' + data.name + '</h1>';
 
             var poster = document.querySelector("#series_poster");
             poster.innerHTML = '<img src="https://image.tmdb.org/t/p/original/' + data.backdrop_path + '"/>';
-      })
-      .catch(function (error) {
+        })
+        .catch(function (error) {
             console.log("El error es: " + error);
-      });
-   }
+        });
+    }
 </script>

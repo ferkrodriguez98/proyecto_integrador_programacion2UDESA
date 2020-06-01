@@ -21,7 +21,7 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
                         Username <span class="text-red-500 font-bold">*</span>
                     </label>
-                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="<%= username ? username : '' %>" id="username" type="text" name="username" required onkeypress="return avoidSomeChars(event)">
+                    <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="<%= username ? username : '' %>" id="username" type="text" name="username" required onkeypress="return avoidSpace(event)">
                     <% if (errors && errors.username_error) { %>
                         <span class="text-xs text-center text-red-400">
                             <%= errors.username_error %>
@@ -91,15 +91,10 @@
 </body>
 <script>
     function avoidSpace(event) {
-        var j = event ? event.which : window.event.keyCode;
-        if (j == 32) return false;
+         var j = event ? event.which : window.event.keyCode;
+         if (j == 32) return false;
     }
-
-    function avoidSomeChars(event) {
-        var k = event ? event.which : window.event.keyCode;
-        if ((k < 48) || (k > 57 && k < 65) || (k > 90 && k < 97) || (k > 122)) return false; // no funciona del todo bien
-    }
-
+    
     const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 

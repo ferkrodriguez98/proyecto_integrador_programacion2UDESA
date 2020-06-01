@@ -5,15 +5,13 @@ const controller = require('../controllers/reviewsController');
 
 router.get('/', controller.index);
 
-router.get('/new', controller.newReview);
-
-router.get('/new/:id', controller.newReview);
+router.post('/new', controller.newReview); // auth
 
 router.post('/store', controller.checkBeforeStoringReview);
 
-router.get('/edit/:id', controller.editReview);
+router.post('/edit', controller.editReview); // auth
 
-router.post('/update/:id', controller.updateReview);
+router.post('/update', controller.checkBeforeUpdatingReview);
 
 router.get('/best', controller.bestReviews);
 

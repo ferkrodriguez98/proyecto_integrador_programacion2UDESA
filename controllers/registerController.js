@@ -1,8 +1,6 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
 const usersController = require('../controllers/usersController')
-const authMiddleware = require('../middlewares/authMiddleware');
-const guestMiddleware = require('../middlewares/guestMiddleware');
 
 var bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
@@ -88,7 +86,7 @@ module.exports = {
                 return res.render('auth/register', {
                     errors : {
                         username_error: false,
-                        email_error : false,
+                        email_error : "Unexpected error",
                     },
                     username : req.body.username,
                     email : req.body.email,

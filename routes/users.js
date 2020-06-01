@@ -6,12 +6,10 @@ const reviewsController = require('../controllers/reviewsController');
 
 router.get('/', controller.index);
 
-// router.get('/:id', controller.userDetailById);
-
 router.get('/search', controller.findUsers);
 
 router.get('/:username', controller.userDetailByUsername);
 
-
+router.get('/profile', controller.myProfile); // auth
 
 module.exports = router;
