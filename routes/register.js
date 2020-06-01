@@ -3,7 +3,7 @@ const router = express.Router();
 
 const controller = require('../controllers/registerController');
 
-router.get('/', controller.index);
+router.get('/', controller.index); // guests
 
 router.post('/', controller.checkIfExists);
 

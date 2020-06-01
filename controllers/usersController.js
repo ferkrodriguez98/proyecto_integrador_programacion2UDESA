@@ -1,12 +1,11 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
 const { Review } = require('../database/models')
+const authMiddleware = require('../middlewares/authMiddleware');
+const guestMiddleware = require('../middlewares/guestMiddleware');
 
 module.exports = {
-    index: function(req, res) {
-        // este debería ser el buscador de usuario por mail o por nombre de usuario
-        // si no encuentra nada devuelve mensaje
-        // el listado debe llevar a una pagina con el detalle del usuario
+    index: function(req, res) { // all users
         DB
             .User
             .findAll()
@@ -18,10 +17,7 @@ module.exports = {
             })
     },
 
-    findUsers: function (req, res) {
-        console.log("hola")
-        console.log(req.query.search)
-        console.log("chau")
+    findUsers: function (req, res) {  // user search
         DB
             .User
             .findAll(
@@ -39,7 +35,6 @@ module.exports = {
                 }
             )
             .then(function(results) {
-                console.log(results)
                 return res.render('users/index', {
                     results : results, 
                     id : results.id,
@@ -54,39 +49,7 @@ module.exports = {
             })
     },
 
-    // findUserReviews: function(req, res) {
-    //     console.log("HOLA")
-    //     DB
-    //         .Review
-    //         .findAll(
-    //             {
-    //                 where : {
-    //                     username : req.params.username,
-    //                 }
-    //             })
-    //             .then(function (results) {
-    //                 return res.render('/users/profile', {
-    //                     results : results,
-    //                 });
-    //             })
-    //             .catch(function (error) {
-    //                 return res.send(error)
-    //             })
-    // },
-
-    // userDetailById: function(req, res) {
-    //     DB
-    //         .User
-    //         .findByPk(req.params.id)
-    //         .then(function (results) {
-    //             return res.send(results);
-    //         })
-    //         .catch(function (error) {
-    //             return res.send(error);
-    //         })
-    // },
-
-    userDetailByUsername: function(req, res) {
+    userDetailByUsername: function(req, res) { // user profile and reviews
         DB
             .User
             .findOne(
@@ -124,8 +87,7 @@ module.exports = {
             })
     },
 
-    myProfile: function(req, res, results) {
-        console.log("entre al controller de users papá")
+    myProfile: function(req, res, results) { // own profile and reviews -- authMiddleware
         DB
             .User
             .findOne(
@@ -146,7 +108,6 @@ module.exports = {
                 }
             )
             .then(function (results) {
-                console.log("USERSCONTROLLER")
                 return res.render(
                     'users/myprofile', 
                 {

@@ -1,13 +1,15 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
 const usersController = require('../controllers/usersController')
+const authMiddleware = require('../middlewares/authMiddleware');
+const guestMiddleware = require('../middlewares/guestMiddleware');
 
 var bcrypt = require('bcryptjs');
 var salt = bcrypt.genSaltSync(10);
 var hash = bcrypt.hashSync("B4c0/\/", salt);
 
 module.exports = {
-    index: function(req, res) {
+    index: function(req, res) { // render auth/register -- guestMiddleware
         return res.render('auth/register', {
             errors : {
                 username_error : false,
@@ -20,7 +22,7 @@ module.exports = {
          });
     },
 
-    checkIfExists: function(req, res) {
+    checkIfExists: function(req, res) { // check if username or email already exists
         DB
             .User
             .findOne(
@@ -94,7 +96,9 @@ module.exports = {
             })
     },
 
-    register: function(req, res) {
+    register: function(req, res) { // create in DB
+        req.body.birthdate == '' ? req.body.birthdate = '2000-01-01' : req.body.birthdate = req.body.birthdate;
+        req.body.password = bcrypt.hashSync(req.body.password, 10)
         DB
             .User
             .create(req.body)

@@ -1,10 +1,11 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
 const { User } = require('../database/models');
+const authMiddleware = require('../middlewares/authMiddleware');
+const guestMiddleware = require('../middlewares/guestMiddleware');
 
 module.exports = {
-    // detalle de la serie con reseñas
-    detail: function(req, res) {
+    detail: function(req, res) { // reviews in series detail
         DB
             .Review
             .findAll(

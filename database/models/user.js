@@ -29,12 +29,13 @@ module.exports = function (sequelize, DataTypes) {
             },
             birthdate: {
                 type: DataTypes.DATE,
-                allowNull: true,
+                allowNull: false,
+                defaultValue: DataTypes.NOW,
             },
             favorite_genre: {
                 type: DataTypes.STRING(255),
                 allowNull: true,
-                defaultValue: "",
+                defaultValue: "Drama",
             },
         },
         {

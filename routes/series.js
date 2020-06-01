@@ -5,8 +5,4 @@ const controller = require('../controllers/seriesController');
 
 router.get('/detail/:id', controller.detail)
 
-// router.get('/', controller.index);
-
-// router.get('/details/:id', controller.serieDetail);
-
 module.exports = router;

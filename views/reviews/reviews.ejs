@@ -18,10 +18,10 @@
         <%= review[i].series_review %> 
 	</div>
 	<div class="pb-2 text-right text-xs">
-		created <%= moment(review[i].createdAt).calendar() %>
+		created <%= moment(review[i].createdAt).format('Do MMM YYYY h:mm a') %>
 	</div>
 	<div class="pb-2 text-right text-xs">
-        updated <%= moment(review[i].updatedAt).calendar() %>
+        updated <%= moment(review[i].updatedAt).format('Do MMM YYYY h:mm a') %>
 	</div>
 	<!-- <% if(review[i].createdAt == review[i].updatedAt) { %>
 	<div class="pb-2 text-right text-xs">
