@@ -92,6 +92,14 @@ module.exports = {
                     where: {
                         email: results.email,
                     },
+                    order: [
+                        [
+                            { 
+                                model: Review, as: "review" 
+                            }, 
+                            'updatedAt', 'DESC' 
+                        ]
+                    ],
                     raw: false,
                     nest: true,
                     include: [ // incluyo las reviews para mandar toda la data
@@ -105,6 +113,7 @@ module.exports = {
                 }
             )
             .then(function (results) {
+                console.log(results)
                 return res.render(
                     'users/myprofile', // renderizo y mando la data
                 {
