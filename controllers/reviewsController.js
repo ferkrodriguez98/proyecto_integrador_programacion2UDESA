@@ -1,10 +1,11 @@
 const DB = require('../database/models');
 const Op = DB.Sequelize.Op;
 const { User } = require('../database/models');
+const { Review } = require('../database/models')
 const bcrypt = require('bcryptjs');
 
 module.exports = {
-    index: function(req, res) { // search all reviews
+    index: function(req, res) { // busca todas las reviews (no la estamos usando)
         DB
             .Review
             .findAll(
@@ -25,7 +26,7 @@ module.exports = {
             })
     },
 
-    newReview: function(req, res) { // render reviews/new_review -- authMiddleware
+    newReview: function(req, res) { // renderiza la pagina de nueva review
         return res.render('reviews/new_review', {
             series_id : req.body.series_id,
             errors : false,
@@ -35,23 +36,23 @@ module.exports = {
         });
     },
 
-    checkBeforeStoringReview: function(req, res) { // auth before storing review
+    checkBeforeStoringReview: function(req, res) { // chequeo antes de crearla que todo este bien
         DB
             .User
             .findOne(
                 {
                     where : {
-                        email: req.body.email,
+                        email: req.body.email, // me fijo que el email que puso exista
                     },
                     
                 }
             )
             .then (function (results) {
                 if (results != null) {
-                    if (bcrypt.compareSync(req.body.password, results.password)) {
-                        return module.exports.saveReview(req, res, results)
+                    if (bcrypt.compareSync(req.body.password, results.password)) { // me fijo que la contraseña sea correcta
+                        return module.exports.saveReview(req, res, results) // si es correcta la mando a guardar
                     } else {
-                        return res.render('reviews/new_review', {
+                        return res.render('reviews/new_review', { // si la contraseña esta mal lo mando de vuelta a que la ponga y le dejo los campos llenos
                             series_id : req.body.series_id,
                             errors : "Incorrect password", 
                             email : req.body.email,
@@ -60,7 +61,7 @@ module.exports = {
                         });
                     }
                 } else {
-                    return res.render('reviews/new_review', {
+                    return res.render('reviews/new_review', { // si el mail no exista lo mismo que arriba
                         series_id : req.body.series_id,
                         errors : "Unexistent user", 
                         email : req.body.email,
@@ -71,7 +72,7 @@ module.exports = {
             })
             .catch (function (error) {
                 console.log(error)
-                return res.render('reviews/new_review', {
+                return res.render('reviews/new_review', { // error inesperado y le mando todo igual
                     series_id : req.body.series_id,
                     errors : "An unexpected error happened, please try again", 
                     email : req.body.email,
@@ -81,21 +82,21 @@ module.exports = {
             })
     },
 
-    saveReview: function (req, res, results) { // store review
-        req.body.user_id = results.id; // forrada mal? funciona 
+    saveReview: function (req, res, results) { // guardar en la db la review
+        req.body.user_id = results.id; // cheat para no perderlo
         console.log(req.body)
         DB
             .Review
             .create(req.body)
             .then(function (results) {
-                return res.redirect('/series/detail/' + req.body.series_id)
+                return res.redirect('/series/detail/' + req.body.series_id) // lo redirijo a la serie
             })
             .catch (error => {
                 return res.send(error)
             })
     },
 
-    editReview: function (req, res) { // render reviews/edit_review -- authMiddleware
+    editReview: function (req, res) { // renderiza la pagina de edtit del review
 		DB
 			.Review
 			.findByPk(req.body.review_id)
@@ -104,7 +105,7 @@ module.exports = {
                     params : req.params,
                     errors : false,
                     email : false,
-                    review_id : results.id,
+                    review_id : results.id, // le mando los datos para mostrar la serie que es
                     series_id : results.series_id,
                     series_review : results.series_review,
                     rating : results.rating,
@@ -115,24 +116,24 @@ module.exports = {
 			})
     },
 
-    checkBeforeUpdatingReview: function(req, res) { // auth before updating review
+    checkBeforeUpdatingReview: function(req, res) { // me fijo bien el user antes de updatear la review
         console.log(req.body)
         DB
             .User
             .findOne(
                 {
                     where : {
-                        email: req.body.email,
+                        email: req.body.email, // me fijo que el mail exista
                     },
                     
                 }
             )
             .then (function (results) {
                 if (results != null) {
-                    if (bcrypt.compareSync(req.body.password, results.password)) {
-                        return module.exports.updateReview(req, res, results)
+                    if (bcrypt.compareSync(req.body.password, results.password)) { // me fijo si la password es correcta
+                        return module.exports.updateReview(req, res, results) // procedo a updatear
                     } else {
-                        return res.render('reviews/edit_review', { 
+                        return res.render('reviews/edit_review', { // si no es correcta la password mismo que siempre lo mando de vuelta para atras con la data
                             review_id : req.body.review_id,
                             series_id : req.body.series_id,
                             errors : "Incorrect password", 
@@ -142,7 +143,7 @@ module.exports = {
                         });
                     }
                 } else {
-                    return res.render('reviews/edit_review', {
+                    return res.render('reviews/edit_review', { // mismo que arriba pero con el mail que no existe
                         review_id : req.body.review_id,
                         series_id : req.body.series_id,
                         errors : "Unexistent user", 
@@ -154,7 +155,7 @@ module.exports = {
             })
             .catch (function (error) {
                 console.log(error)
-                return res.render('reviews/edit_review', { 
+                return res.render('reviews/edit_review', { // error inesperado y le mando la data
                     review_id : req.body.review_id,
                     series_id : req.body.series_id,
                     errors : "Sorry, an error ocurred, please try again", 
@@ -165,7 +166,7 @@ module.exports = {
             })
     },
     
-    updateReview: function(req, res, results) { // update review
+    updateReview: function(req, res, results) { // efectivamente actualizo la review con la data nueva
         console.log(req.body)
         DB
             .Review
@@ -183,6 +184,32 @@ module.exports = {
                 return res.send(error)
             })
     },
+
+    newestReviews: function(req, res) { // recent reviews
+        DB
+            .Review
+            .findAll({
+                order: [
+                    [ 'updatedAt', 'DESC' ]
+                ],
+                include: [
+                    { 
+                        model: User,
+                        as: 'user',
+                        required: false,
+                    }
+                ],
+                limit: 10,
+            })
+            .then(function (results) {
+                return res.render('reviews/newest', {
+                    review: results,
+                });
+            })
+            .catch(function (error) {
+                return res.send(error)
+            })
+    },
     
     bestReviews: function(req, res) { // best reviews
         DB
@@ -191,10 +218,19 @@ module.exports = {
                 order: [
                     [ 'rating', 'DESC' ]
                 ],
+                include: [
+                    { 
+                        model: User,
+                        as: 'user',
+                        required: false,
+                    }
+                ],
                 limit: 10,
             })
             .then(function (results) {
-                res.send(results);
+                res.render('reviews/best', {
+                    review: results,
+                });
             })
             .catch(function (error) {
                 return res.send(error)
@@ -208,27 +244,17 @@ module.exports = {
                 order: [
                     [ 'rating', 'ASC' ]
                 ],
+                include: [
+                    { 
+                        model: User,
+                        as: 'user',
+                        required: false,
+                    }
+                ],
                 limit: 10,
             })
             .then(function (results) {
-                res.send(results);
-            })
-            .catch(function (error) {
-                return res.send(error)
-            })
-    },
-
-    recentReviews: function(req, res) { // recent reviews
-        DB
-            .Review
-            .findAll({
-                order: [
-                    [ 'updatedAt', 'DESC' ]
-                ],
-                limit: 5,
-            })
-            .then(function (results) {
-                return res.render('reviews/recent', {
+                res.render('reviews/worst', {
                     review: results,
                 });
             })
@@ -254,7 +280,59 @@ module.exports = {
             })
     },
 
-    deleteReview: function(req, res) { // destroy review
+    checkBeforeDeletingReview: function(req, res) { // me fijo bien el user antes de deletear la review
+        console.log(req.body)
+        DB
+            .User
+            .findOne(
+                {
+                    where : {
+                        username: req.body.username, // busco el usuario
+                    },
+                    raw: false,
+                    nest: true,
+                    include: [
+                        { 
+                            model: Review,
+                            raw: true,
+                            as: 'review',
+                            required: false,
+                        }
+                    ],
+                }
+            )
+            .then (function (results) {
+                if (results != null) {
+                    if (bcrypt.compareSync(req.body.password, results.password)) { // me fijo si la password es correcta
+                        return module.exports.deleteReview(req, res, results) // procedo a deletear
+                    } else {
+                        return res.render('users/myprofile', { // si no es correcta la password mismo que siempre lo mando de vuelta para atras con la data
+                            id : results.id,
+                            username : results.username,
+                            email: results.email,
+                            birthdate: results.birthdate,
+                            favorite_genre: results.favorite_genre,
+                            review: results.review,
+                            errors: "Incorrect password",
+                        });
+                    }
+                }
+            })
+            .catch (function (error) {
+                console.log(error)
+                return res.render('users/myprofile', { // error inesperado y le mando la data
+                    id : results.id,
+                    username : results.username,
+                    email: results.email,
+                    birthdate: results.birthdate,
+                    favorite_genre: results.favorite_genre,
+                    review: results.review,
+                    errors : "Sorry, an error ocurred, please try again", 
+                });
+            })
+    },
+
+    deleteReview: function(req, res) { // destruyo la review de la base de datos
         console.log(req.body)
         DB
             .Review
@@ -264,7 +342,7 @@ module.exports = {
                 }
             })
             .then(function (results) {
-                return res.render('index'); // mandar al perfil de vuelta
+                return res.render('index'); // mando al home, podriamos mandar al perfil de vuelta o al detalle de esa serie
             })
             .catch(function (error) {
                 return res.send(error);
@@ -272,7 +350,7 @@ module.exports = {
 
     },
 
-    ourFavouriteReviews: function(req, res) { // reviews from user with id 1
+    ourFavouriteReviews: function(req, res) { // reviews de carlitostebes
         DB
             .Review
             .findAll({

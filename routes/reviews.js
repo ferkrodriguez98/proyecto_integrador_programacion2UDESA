@@ -17,11 +17,11 @@ router.get('/best', controller.bestReviews);
 
 router.get('/worst', controller.worstReviews);
 
-router.get('/recent', controller.recentReviews);
+router.get('/newest', controller.newestReviews);
 
 router.get('/series/:id', controller.seriesReviews);
 
-router.post('/delete/:id', controller.deleteReview);
+router.post('/delete/:id', controller.checkBeforeDeletingReview);
 
 router.get('/our-favourites', controller.ourFavouriteReviews);
 
