@@ -185,12 +185,12 @@ module.exports = {
             })
     },
 
-    newestReviews: function(req, res) { // recent reviews
+    newestReviews: function(req, res) { // busca las reviews mas nuevas
         DB
             .Review
             .findAll({
                 order: [
-                    [ 'updatedAt', 'DESC' ]
+                    [ 'updatedAt', 'DESC' ] // las ordena desde las mas nuevas
                 ],
                 include: [
                     { 
@@ -199,11 +199,11 @@ module.exports = {
                         required: false,
                     }
                 ],
-                limit: 10,
+                limit: 10, // agarro solo las 10 mas nuevas
             })
             .then(function (results) {
-                return res.render('reviews/newest', {
-                    review: results,
+                return res.render('reviews/newest', { // renderizo la pagina de newest
+                    review: results, // le mando los resultados
                 });
             })
             .catch(function (error) {
@@ -211,12 +211,12 @@ module.exports = {
             })
     },
     
-    bestReviews: function(req, res) { // best reviews
+    bestReviews: function(req, res) { // busca las reviews mejores puntuadas
         DB
             .Review
             .findAll({
                 order: [
-                    [ 'rating', 'DESC' ]
+                    [ 'rating', 'DESC' ] // las ordena desde las mejor puntuadas
                 ],
                 include: [
                     { 
@@ -225,11 +225,11 @@ module.exports = {
                         required: false,
                     }
                 ],
-                limit: 10,
+                limit: 10, // agarro solo las 10 mejores
             })
             .then(function (results) {
-                res.render('reviews/best', {
-                    review: results,
+                res.render('reviews/best', { // renderizo la pagina de best
+                    review: results, // le mando los resultados
                 });
             })
             .catch(function (error) {
@@ -237,12 +237,12 @@ module.exports = {
             })
     },
     
-    worstReviews: function(req, res) { // worst reviews
+    worstReviews: function(req, res) { // busca las reviews peores puntuadas
         DB
             .Review
             .findAll({
                 order: [
-                    [ 'rating', 'ASC' ]
+                    [ 'rating', 'ASC' ] // las ordena desde las peores puntuadas
                 ],
                 include: [
                     { 
@@ -251,11 +251,11 @@ module.exports = {
                         required: false,
                     }
                 ],
-                limit: 10,
+                limit: 10, // agarra solo las 10 peores
             })
             .then(function (results) {
-                res.render('reviews/worst', {
-                    review: results,
+                res.render('reviews/worst', { // renderizo la pagina de worst
+                    review: results, // le mando los resultados
                 });
             })
             .catch(function (error) {
@@ -263,13 +263,13 @@ module.exports = {
             })
     },
 
-    seriesReviews: function(req, res) { // reviews from a series
+    seriesReviews: function(req, res) { // reviews de una serie
         DB
             .Review
             .findAll(
             {
                 where : {
-                    series_id : req.params.id,
+                    series_id : req.params.id, // busco el id que coincide con el de la URL
                 }
             })
             .then(function (results) {
@@ -349,22 +349,4 @@ module.exports = {
             })
 
     },
-
-    ourFavouriteReviews: function(req, res) { // reviews de carlitostebes
-        DB
-            .Review
-            .findAll({
-                where : {
-                    user_id : 1,
-                }
-            })
-            .then(function (results) {
-                return res.render('reviews/ourfavourites', {
-                    review : results,
-                })
-            })
-            .catch(function (error) {
-                return res.send(error);
-            })
-    }
 }

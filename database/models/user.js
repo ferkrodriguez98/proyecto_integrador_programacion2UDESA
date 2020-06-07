@@ -1,7 +1,6 @@
 const Review = require('./review.js')
 
 module.exports = function (sequelize, DataTypes) {
-    // const bcrypt = require("bcryptjs");
 
     const user = sequelize.define(
         'User',
@@ -12,7 +11,7 @@ module.exports = function (sequelize, DataTypes) {
                 autoIncrement: true,
             },
             username: { 
-                type: DataTypes.STRING, 
+                type: DataTypes.STRING(255), 
                 primaryKey: true, 
                 autoincrement: true, 
                 unique: true,
@@ -30,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
             birthdate: {
                 type: DataTypes.DATE,
                 allowNull: false,
-                defaultValue: DataTypes.NOW,
+                defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
             },
             favorite_genre: {
                 type: DataTypes.STRING(255),
@@ -43,18 +42,6 @@ module.exports = function (sequelize, DataTypes) {
             timestamps: false,
         }
     );
-
-    // user.associate = function(models) {
-    //     user.hasMany(models.Review, {
-    //         as: 'review',
-    //     });
-    // }
-
-    // user.beforeCreate(user => {
-    //     if (user.password !== null) {
-    //         user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
-    //     }
-    // });
 
     return user;
 }

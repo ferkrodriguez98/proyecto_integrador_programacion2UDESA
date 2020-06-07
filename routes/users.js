@@ -4,12 +4,10 @@ const router = express.Router();
 const controller = require('../controllers/usersController');
 const reviewsController = require('../controllers/reviewsController');
 
-router.get('/', controller.index);
+router.get('/', controller.index); // no la usamos
 
-router.get('/search', controller.findUsers);
+router.get('/search', controller.findUsers); // search de users por username o email
 
-router.get('/:username', controller.userDetailByUsername);
-
-router.get('/profile', controller.myProfile); // auth
+router.get('/:username', controller.userDetailByUsername); // detalle de usuario
 
 module.exports = router;
