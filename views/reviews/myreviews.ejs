@@ -55,20 +55,34 @@
 					</div>
 					</div>
 			
-					<p>Once you delete your review you can't recover it.</p>
-			
-					<div class="flex justify-end pt-4">
-						<div class="modal-close">
-							<a class="inline-block bg-blue-500 hover:bg-blue-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
-								No, keep it.
-							</a>
-						</div>
-						<form action="/reviews/delete/<%= review[i].id %>" method="POST">
-							<button type="submit" class="inline-block bg-red-500 hover:bg-red-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
-								Yes, delete it!
-							</button>
-						</form>
-					</div>
+               <p>Once you delete your review you can't recover it.</p>
+               
+					<form action="/reviews/delete/<%= review[i].id %>" method="POST">
+                  <div class="my-4">
+                     <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                        Enter your password
+                     </label>
+                     <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" name="password" required>
+                     <input class="hidden shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="username" type="text" name="username" value="<%= username %>" required>
+                  </div>
+                  <% if (errors) { %>
+                     <div class="mb-4 text-xs text-center text-red-400">
+                         <span>
+                             <%= errors %>
+                         </span>
+                     </div>
+                     <% } %>
+                  <div class="flex justify-end pt-4">
+                     <div class="modal-close">
+                        <a class="inline-block bg-blue-500 hover:bg-blue-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
+                           No, keep it.
+                        </a>
+                     </div>
+                     <button type="submit" class="inline-block bg-red-500 hover:bg-red-700 text-white text-md font-bold py-2 px-4 mx-1 rounded">
+                        Yes, delete it!
+                     </button>
+                  </div>
+               </form>
 				</div>
 			</div>
 		</div>
