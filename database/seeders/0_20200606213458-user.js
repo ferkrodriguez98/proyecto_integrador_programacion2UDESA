@@ -13,8 +13,8 @@ var users = [];
 
 module.exports = {
 	up: (queryInterface, Sequelize) => {
-		for (let i = 0; i < 9997; i++) {
-
+		for (let i = 0; i < 100; i++) {
+			console.log(i)
 			users.push({
 				username: faker.internet.userName(),
 				email: faker.internet.email(),
@@ -27,7 +27,6 @@ module.exports = {
 				favorite_genre: genres[Math.floor(Math.random() * (9))],
 			})
 		}
-		console.log(users)
 		return queryInterface.bulkInsert("Users", users);
 	},
 
